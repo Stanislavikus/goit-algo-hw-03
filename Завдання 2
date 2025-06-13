@@ -1,0 +1,25 @@
+import turtle
+
+def koch_snowflake(order, size):
+    if order == 0:
+        turtle.forward(size)
+    else:
+        for angle in [60, -120, 60, 0]:
+            koch_snowflake(order - 1, size / 3)
+            turtle.left(angle)
+
+if __name__ == "__main__":
+    import sys
+    level = int(input("Введіть рівень рекурсії (наприклад, 3): "))
+    
+    turtle.speed(0)
+    turtle.penup()
+    turtle.goto(-150, 90)
+    turtle.pendown()
+
+    for _ in range(3):
+        koch_snowflake(level, 300)
+        turtle.right(120)
+
+    turtle.hideturtle()
+    turtle.done()
