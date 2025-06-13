@@ -1,0 +1,51 @@
+import os
+import shutil
+from pathlib import Path
+
+def setup_test_environment():
+    # Створення тестової вихідної папки з файлами
+    src = "source_folder"
+    if os.path.exists(src):
+        shutil.rmtree(src)
+    os.makedirs(os.path.join(src, "subfolder"), exist_ok=True)
+
+    # Тестові файли
+    files = [
+        (src, "image1.jpg"),
+        (src, "doc1.txt"),
+        (os.path.join(src, "subfolder"), "presentation.pptx"),
+        (os.path.join(src, "subfolder"), "notes.docx"),
+        (os.path.join(src, "subfolder"), "script.py")
+    ]
+
+    for folder, filename in files:
+        with open(os.path.join(folder, filename), "w") as f:
+            f.write(f"Test content for {filename}")
+
+    print("✅ Тестова структура створена.")
+
+def copy_and_sort_files(src_dir, dest_dir):
+    if not os.path.exists(src_dir):
+        print(f"❌ Вихідна директорія не існує: {src_dir}")
+        return
+
+    try:
+        for item in os.listdir(src_dir):
+            src_path = os.path.join(src_dir, item)
+            if os.path.isdir(src_path):
+                copy_and_sort_files(src_path, dest_dir)
+            else:
+                ext = Path(item).suffix[1:] or 'no_ext'
+                dest_subdir = os.path.join(dest_dir, ext)
+                os.makedirs(dest_subdir, exist_ok=True)
+                shutil.copy2(src_path, os.path.join(dest_subdir, item))
+    except Exception as e:
+        print(f"⚠️ Помилка при обробці {src_dir}: {e}")
+
+if __name__ == "__main__":
+    source = "source_folder"
+    destination = "test_dist"
+
+    setup_test_environment()
+    copy_and_sort_files(source, destination)
+    print(f"📂 Скопійовано до: '{destination}'")
