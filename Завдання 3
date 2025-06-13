@@ -15,3 +15,4 @@ if __name__ == "__main__":
     print(f"Початковий стан: {state}")
     hanoi(n, 'A', 'C', 'B', state)
     print(f"Кінцевий стан: {state}")
+
